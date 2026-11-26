@@ -1,0 +1,12 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-brand: #e5192f;
+  --color-brand-soft: #fde8ea;
+  --color-ink: #16171b;
+  --font-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+}
+
+body {
+  @apply bg-zinc-50 text-ink antialiased;
+}
