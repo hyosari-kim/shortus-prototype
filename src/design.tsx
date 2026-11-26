@@ -12,39 +12,27 @@ const ROWS: Row[] = [
   { key: 'resolution', label: '세부 설정', options: ['1080p', '720p'], show: (d) => `${d.logo ? '로고 사용' : '로고 없음'} · mp4 · ${d.resolution} · 고화질` },
 ]
 
-export type Scope = 'one' | 'all'
-
-// 기존 디자인 화면과 Part1 가설 1의 편집 화면 디자인 탭이 함께 쓴다.
-export function DesignSettings({ scope, onScope }: { scope: Scope; onScope: (s: Scope) => void }) {
+// 편집·디자인 화면의 디자인 탭. 위쪽 후보 탭에서 고른 후보에만 적용한다.
+export function DesignSettings() {
   const { state, dispatch } = useStore()
   const p = state.project!
-  const selected = p.candidates.filter((c) => c.selected)
-  const active = selected.find((c) => c.id === p.activeId) ?? selected[0]
+  const active = p.candidates.find((c) => c.id === p.activeId)!
   const d = designOf(p, active)
   return (
-    <div>
-      <div className="grid grid-cols-2 rounded-xl bg-zinc-100 p-1 text-sm">
-        {(['one', 'all'] as const).map((s) => (
-          <button key={s} onClick={() => onScope(s)} className={`rounded-lg py-2 font-semibold ${scope === s ? 'bg-white shadow-sm' : 'text-zinc-500'}`}>
-            {s === 'one' ? '이 후보에만' : `후보 ${selected.length}개 모두에`}
-          </button>
-        ))}
-      </div>
-      <ul className="mt-2 divide-y divide-zinc-200">
-        {ROWS.map((r) => {
-          const cur = d[r.key]
-          const next = r.options[(r.options.indexOf(cur) + 1) % r.options.length]
-          return (
-            <li key={r.key}>
-              <button className="flex w-full justify-between py-4 text-sm" onClick={() => dispatch({ type: 'setDesign', scope, patch: { [r.key]: next } })}>
-                <b>{r.label}</b>
-                <span className="text-zinc-500">{r.show ? r.show(d) : String(cur)} ›</span>
-              </button>
-            </li>
-          )
-        })}
-      </ul>
-    </div>
+    <ul className="divide-y divide-zinc-200">
+      {ROWS.map((r) => {
+        const cur = d[r.key]
+        const next = r.options[(r.options.indexOf(cur) + 1) % r.options.length]
+        return (
+          <li key={r.key}>
+            <button className="flex w-full justify-between py-4 text-sm" onClick={() => dispatch({ type: 'setDesign', patch: { [r.key]: next } })}>
+              <b>{r.label}</b>
+              <span className="text-zinc-500">{r.show ? r.show(d) : String(cur)} ›</span>
+            </button>
+          </li>
+        )
+      })}
+    </ul>
   )
 }
 

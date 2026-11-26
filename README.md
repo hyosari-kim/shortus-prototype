@@ -27,7 +27,7 @@ npm run dev
 - `src/model.ts`: 타입, 고정 데이터(AI 분석 결과 대신 쓰는 값), 리듀서. 퍼널 규칙은 전부 여기에 있습니다.
   - 분석 비용은 1분에 4크레딧이고, 분석이 끝나 후보가 나올 때 차감합니다.
   - 자동 완성 모드에서 막힌 후보가 없으면 `candidates`를 건너뛰고 `rendering`으로 갑니다.
-  - 디자인은 공용(`sharedDesign`)과 후보별(`candidate.design`) 두 단계입니다. "후보 N개 모두에"로 바꾸면 후보별 값을 지웁니다.
+  - 디자인은 기본값(`sharedDesign`) 위에 후보별 값(`candidate.design`)을 덮어씁니다. 편집·디자인 화면의 디자인 탭은 위쪽 후보 탭에서 고른 후보에만 적용됩니다.
   - 막힌 후보로 만들기를 누르면 `rightsConfirmedAt`에 권리 확인 시각을 남깁니다.
 - `src/store.tsx`: `useReducer`와 `localStorage` 저장. 새로고침해도 단계가 유지됩니다.
 - `src/screens/*`: 단계별 화면. 분석과 렌더는 `Progress` 하나가 맡고, 진행률은 저장하지 않고 단계 시작 시각에서 계산합니다.

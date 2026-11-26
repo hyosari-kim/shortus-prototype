@@ -134,7 +134,7 @@ export type Action =
   | { type: 'setActive'; id: string }
   | { type: 'updateCandidate'; id: string; patch: Partial<Pick<Candidate, 'range' | 'title' | 'hookLine'>> }
   | { type: 'removeCandidate'; id: string }
-  | { type: 'setDesign'; scope: 'one' | 'all'; patch: Partial<Design> }
+  | { type: 'setDesign'; patch: Partial<Design> }
   | { type: 'make'; now: number }
   | { type: 'renderDone' }
   | { type: 'resetDemo' }
@@ -217,17 +217,10 @@ export function reducer(state: State, action: Action): State {
       const next = candidates.find((c) => c.selected)
       return put({ candidates, activeId: next?.id ?? null })
     }
-    case 'setDesign': {
-      if (action.scope === 'all') {
-        return put({
-          sharedDesign: { ...p.sharedDesign, ...action.patch },
-          candidates: mapC((c) => ({ ...c, design: undefined })),
-        })
-      }
+    case 'setDesign':
       return put({
         candidates: mapC((c) => (c.id === p.activeId ? { ...c, design: { ...designOf(p, c), ...action.patch } } : c)),
       })
-    }
     case 'make': {
       if (selectedOf(p).length === 0) return state
       return put({ phase: 'rendering', phaseStartedAt: action.now, rightsConfirmedAt: p.rightsConfirmedAt ?? action.now })

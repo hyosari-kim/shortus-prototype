@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { DesignSettings, Preview, type Scope } from '../design'
+import { DesignSettings, Preview } from '../design'
 import { fmt } from '../model'
 import { useStore } from '../store'
 import { BlockedToast, Button, CandidateTabs, StepHeader } from '../ui'
@@ -13,7 +13,6 @@ export function Edit() {
   const p = state.project!
   const c = p.candidates.find((x) => x.id === p.activeId)!
   const [tab, setTab] = useState<(typeof TABS)[number]>('구간')
-  const [scope, setScope] = useState<Scope>('all')
   const selectedCount = p.candidates.filter((x) => x.selected).length
   const span = p.analyzeRange
   const total = span.end - span.start
@@ -86,7 +85,7 @@ export function Edit() {
             <div className="mt-6">
               <h3 className="font-bold">디자인</h3>
               <p className="mb-3 text-xs text-zinc-500">템플릿·폰트·화면 비율·자동 컷을 바꾸면 오른쪽 미리보기에 바로 보여요.</p>
-              <DesignSettings scope={scope} onScope={setScope} />
+              <DesignSettings />
             </div>
           )}
           {(tab === '장면' || tab === '댓글') && <p className="mt-6 text-sm text-zinc-400">프로토타입 범위 밖 ({tab} 탭은 목업만 있습니다)</p>}
